@@ -1,0 +1,35 @@
+{
+  "name": "find-your-paw-friend",
+  "version": "1.0.0",
+  "description": "Find paw friends near you",
+  "main": "server.ts",
+  "scripts": {
+    "test": "npm run test",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src/server.ts --format cjs --out-dir dist --dts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fernandosantoshs/find-a-paw-friend.git"
+  },
+  "keywords": [
+    "API",
+    "TYPESCRIPT",
+    "SOLID"
+  ],
+  "author": "Santos, Fernando",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fernandosantoshs/find-a-paw-friend/issues"
+  },
+  "homepage": "https://github.com/fernandosantoshs/find-a-paw-friend#readme",
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "fastify": "^5.7.4"
+  }
+}
