@@ -7,14 +7,18 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "commonjs",
-    "target": "es2024",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2023",
     "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
-
+    "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
@@ -34,6 +38,8 @@
 
     // Recommended Options
     "strict": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "5.0", 
     "jsx": "react-jsx",
 //    "verbatimModuleSyntax": true,
     "isolatedModules": true,
