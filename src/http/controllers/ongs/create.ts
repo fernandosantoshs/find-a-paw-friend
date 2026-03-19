@@ -1,4 +1,5 @@
-import { createOngUseCase } from '@/use-cases/create-ong';
+import { PrismaOngsRepository } from '@/repositories/prisma/prisma-ongs-respository';
+import { CreateOngUseCase } from '@/use-cases/create-ong';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
@@ -27,17 +28,24 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     uf,
   } = ongBodySchema.parse(request.body);
 
-  const ong = await createOngUseCase({
-    name,
-    email,
-    whatsapp,
-    zipcode,
-    address_street,
-    address_number,
-    ...(address_complement && { address_complement }),
-    city,
-    uf,
-  });
+  try {
+    const ongsRepository = new PrismaOngsRepository();
+    const createOngUseCase = new CreateOngUseCase(ongsRepository);
 
-  return reply.status(201).send(ong);
+    await createOngUseCase.execute({
+      name,
+      email,
+      whatsapp,
+      zipcode,
+      address_street,
+      address_number,
+      address_complement: address_complement || null,
+      city,
+      uf,
+    });
+  } catch (error) {
+    return reply.status(409).send();
+  }
+
+  return reply.status(201).send();
 }

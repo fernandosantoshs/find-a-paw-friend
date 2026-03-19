@@ -1,51 +1,48 @@
-import { prisma } from '@/lib/prisma';
+import { OngsRepository } from '@/repositories/ongs-repository';
 
-interface CreateOngRequest {
+interface CreateOngUseCaseRequest {
   name: string;
   email: string;
   whatsapp: string;
   zipcode: string;
   address_street: string;
   address_number: string;
-  address_complement?: string;
+  address_complement?: string | null;
   city: string;
   uf: string;
 }
+export class CreateOngUseCase {
+  constructor(private ongsRepository: OngsRepository) {}
 
-export async function createOngUseCase({
-  name,
-  email,
-  whatsapp,
-  zipcode,
-  address_street,
-  address_number,
-  address_complement,
-  city,
-  uf,
-}: CreateOngRequest) {
-  const emailAlreadyExists = await prisma.ong.findUnique({
-    where: {
-      email,
-    },
-  });
+  async execute({
+    name,
+    email,
+    whatsapp,
+    zipcode,
+    address_street,
+    address_number,
+    address_complement,
+    city,
+    uf,
+  }: CreateOngUseCaseRequest) {
+    const emailAlreadyExists = await this.ongsRepository.findByEmail(email);
 
-  if (emailAlreadyExists) {
-    throw new Error('Email already exists');
-  }
+    if (emailAlreadyExists) {
+      throw new Error('Email already exists');
+    }
 
-  const ong = await prisma.ong.create({
-    data: {
+    const ong = await this.ongsRepository.create({
       name,
       email,
       whatsapp,
       zipcode,
       address_street,
       address_number,
-      address_complement: address_complement || null,
+      ...(address_complement && { address_complement }),
       city,
       uf,
-    },
-  });
+    });
 
-  return ong;
+    return ong;
+  }
 }
