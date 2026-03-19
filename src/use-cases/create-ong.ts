@@ -1,4 +1,5 @@
 import { OngsRepository } from '@/repositories/ongs-repository';
+import { UserAlreadyExistsError } from './errors/user-already-exists-error';
 
 interface CreateOngUseCaseRequest {
   name: string;
@@ -28,7 +29,7 @@ export class CreateOngUseCase {
     const emailAlreadyExists = await this.ongsRepository.findByEmail(email);
 
     if (emailAlreadyExists) {
-      throw new Error('Email already exists');
+      throw new UserAlreadyExistsError();
     }
 
     const ong = await this.ongsRepository.create({
@@ -38,7 +39,7 @@ export class CreateOngUseCase {
       zipcode,
       address_street,
       address_number,
-      ...(address_complement && { address_complement }),
+      address_complement: address_complement || null,
       city,
       uf,
     });

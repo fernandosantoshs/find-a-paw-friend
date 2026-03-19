@@ -1,5 +1,6 @@
 import { PrismaOngsRepository } from '@/repositories/prisma/prisma-ongs-respository';
 import { CreateOngUseCase } from '@/use-cases/create-ong';
+import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
@@ -44,7 +45,10 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       uf,
     });
   } catch (error) {
-    return reply.status(409).send();
+    if (error instanceof UserAlreadyExistsError) {
+      return reply.status(409).send({ message: error.message });
+    }
+    throw error;
   }
 
   return reply.status(201).send();
