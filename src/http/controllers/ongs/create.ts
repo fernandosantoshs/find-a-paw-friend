@@ -1,8 +1,7 @@
-import { PrismaOngsRepository } from '@/repositories/prisma/prisma-ongs-respository';
-import { CreateOngUseCase } from '@/use-cases/create-ong';
 import { UserAlreadyExistsError } from '@/use-cases/errors/user-already-exists-error';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
+import { makeCreateOngUseCase } from '@/factories/make-create-ong';
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const ongBodySchema = z.object({
@@ -30,8 +29,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   } = ongBodySchema.parse(request.body);
 
   try {
-    const ongsRepository = new PrismaOngsRepository();
-    const createOngUseCase = new CreateOngUseCase(ongsRepository);
+    const createOngUseCase = makeCreateOngUseCase();
 
     await createOngUseCase.execute({
       name,
